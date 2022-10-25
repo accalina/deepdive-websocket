@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  nginx-websocket:
+    image: nginx:1.23.1-alpine
+    container_name: nginx-websocket
+    volumes:
+        - './data:/usr/share/nginx/html'
+    ports:
+        - '81:80'

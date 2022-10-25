@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Websocket - Broadcast</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+</head>
+<body>
+    
+    <div id="main-content">
+        <p>{{name}}</p>
+        <input type="text" v-model="name">
+        <ul>
+            <li v-for="chat in chatlog">{{chat}}</li>
+        </ul>
+        <input type="text" v-model="chattext">
+        <button @click="sendMessage">send</button>
+    </div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8765")
+        // const socket = new WebSocket("wss://socketsbay.com/wss/v2/2/demo/")
+
+        var app = new Vue({
+            el: "#main-content",
+            data: {
+                "name": "accalina",
+                "chattext": "",
+                "chatlog": [] 
+            },
+            methods: {
+                sendMessage: function(){
+                    let message = this.name+": " + this.chattext
+                    socket.send(message)
+                    this.chatlog.push(message)
+                    this.chattext = ""
+                }
+            }
+        })
+        
+        socket.addEventListener('open', function(event){
+            console.log("connected!")
+        })
+
+        socket.addEventListener('message', function(event){
+            console.log(event)
+            app.chatlog.push(event.data)
+        })
+
+        socket.onmessage = function(event) {
+            console.log(event)
+            app.chatlog.push(event.data)
+        }
+
+        function contactServer(){
+            socket.send("init")
+        }
+
+    </script>
+</body>
+</html>
