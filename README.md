@@ -1,7 +1,3 @@
-
-# HTML with vue.js Client for Websocket
-
-A Simple example o
 # Deep dive Websocket
 
 A sets of servers and client for understading Websocket using different programming language
